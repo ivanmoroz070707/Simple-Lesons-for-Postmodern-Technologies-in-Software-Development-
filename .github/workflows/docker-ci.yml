@@ -4,7 +4,7 @@ on:
     branches: [ "DockerFile_for_lab_2", "main" ]
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ivanmoroz070707/Simple-Lesons-for-Postmodern-Technologies-in-Software-Development-}}
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push:

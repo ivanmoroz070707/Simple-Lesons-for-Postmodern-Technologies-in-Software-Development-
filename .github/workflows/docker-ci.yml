@@ -31,26 +31,26 @@ jobs:
         run: |
           docker build -t ${{ env.IMAGE }}:${{ github.sha }} .
           docker push ${{ env.IMAGE }}:${{ github.sha }}
-    test:
-      needs: build-and-push # Запускается только после успешной сборки
-      runs-on: ubuntu-latest
-      permissions:
-        packages: read
-      steps:
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  test:
+    needs: build-and-push 
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    steps:
+    - name: Log in to the Container registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Lowercase image name
-        run: |
-          echo "IMAGE=${{ env.REGISTRY }}/$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+    - name: Lowercase image name
+      run: |
+        echo "IMAGE=${{ env.REGISTRY }}/$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
-      - name: Pull Docker image
-        run: docker pull ${{ env.IMAGE }}:${{ github.sha }}
+    - name: Pull Docker image
+      run: docker pull ${{ env.IMAGE }}:${{ github.sha }}
 
-      - name: Run tests inside container
-        # Запускаем контейнер и переопределяем CMD для выполнения тестов
-        run: docker run ${{ env.IMAGE }}:${{ github.sha }} python -m unittest discover
+    - name: Run tests inside container
+      
+      run: docker run ${{ env.IMAGE }}:${{ github.sha }} python -m unittest discover
